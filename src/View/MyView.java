@@ -1,3 +1,6 @@
+
+
+
 package View;
 import Controller.MyController;
 import processing.core.PApplet;
@@ -31,7 +34,11 @@ public class MyView extends PApplet implements IView{
     }
 
     public void drawPlayer(PApplet g, MyController controller) {
-        g.rect(controller.player_x, controller.player_y, 150, 20, 7); // Zeichnet den Spieler
+        float playerX = controller.getModel().getPlayerX();
+        float playerY = controller.getModel().getPlayerY();
+        float playerWidth = controller.getModel().getPlayerWidth();
+        float playerHeight = controller.getModel().getPlayerHeight();
+        g.rect(playerX, playerY, playerWidth, playerHeight, 7); // Zeichnet den Spieler
     }
 
     public void keyPressed(PApplet g) {

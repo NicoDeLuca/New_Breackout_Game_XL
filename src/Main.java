@@ -11,7 +11,7 @@ public class Main {
 
         var model = new MyModel();
         var view = new MyView();
-        var controller = new MyController(570.0F, 330.0F,view, model);
+        var controller = new MyController(view, model);
 
 
 
@@ -19,6 +19,7 @@ public class Main {
         controller.setModel(model);
         controller.setView(view);
         view.setController(controller);
+
 
 
         // Starts the processing application

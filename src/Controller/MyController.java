@@ -6,16 +6,14 @@ import Model.*;
 
 public class MyController implements IController{
 
-    public float player_y; // y-Position des Spielers
-    public float player_x; // x-Position des Spielers
+
 
     private MyView view;
 
     private MyModel model;
 
-    public MyController(float player_y, float player_x, MyView view, MyModel model) {
-        this.player_y = player_y;
-        this.player_x = player_x;
+    public MyController(MyView view, MyModel model) {
+
         this.view = view;
         this.model = model;
     }
@@ -30,25 +28,31 @@ public class MyController implements IController{
 
 
     public void moveRight() {
-        if (player_x < 640) // Prüft, ob der Spieler noch auf dem Spielfeld ist
-            player_x = player_x + 10; // Verschiebt den Spieler nach rechts
+        float playerX = model.getPlayerX();
+        if (playerX < 640) // Prüft, ob der Spieler noch auf dem Spielfeld ist
+            model.setPlayerX(playerX + 10); // Verschiebt den Spieler nach rechts
     }
 
     public void moveLeft() {
-        if (player_x > 10) // Prüft, ob der Spieler noch auf dem Spielfeld ist
-            player_x = player_x - 10; // Verschiebt den Spieler nach links
+        float playerX = model.getPlayerX();
+        if (playerX > 10) // Prüft, ob der Spieler noch auf dem Spielfeld ist
+            model.setPlayerX(playerX - 10); // Verschiebt den Spieler nach rechts
     }
 
     public float getBallX() {
-        return model.ballX;
+        return model.getBallX();
     }
 
     public float getBallY() {
-        return model.ballY;
+        return model.getBallY();
     }
 
     public void moveBall() { //ruft die MoveBall Methode um sie dann in der View von hier aufrufen zu können.
         model.moveBall();
+    }
+
+    public MyModel getModel() {
+        return model;
     }
 
 }
