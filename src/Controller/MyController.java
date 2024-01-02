@@ -18,6 +18,8 @@ public class MyController implements IController{
         this.model = model;
     }
 
+
+
     public void setView(MyView view) {
         this.view = view;
     }
@@ -47,13 +49,17 @@ public class MyController implements IController{
         return model.getBallY();
     }
 
+
+
     public void moveBall() { //ruft die MoveBall Methode um sie dann in der View von hier aufrufen zu können.
         model.moveBall();
-        model.checkBlockCollisions(model.getBallX(), model.getBallY(), 10);
+        model.checkBlockCollisions();
     }
 
     public MyModel getModel() {
         return model;
     }
+
+
 
 }
