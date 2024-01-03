@@ -30,12 +30,12 @@ public class MyModel  {
     }
 
     public MyModel() {
-        ballX = 400;
+        ballX = 440;
         ballY = 300;
-        ballSpeedX = 6;
+        ballSpeedX = 0;
         ballSpeedY = 6;
         ballRadius = 10;
-        playerX = 570.0F;
+        playerX = 370.0F;
         playerY = 570.0F;
         playerWidth = 150;
         playerHeight = 20;
@@ -120,7 +120,18 @@ public class MyModel  {
             // Aktualisiere die Geschwindigkeit des Balls basierend auf dem Abprallwinkel
             ballSpeedX = (float) (6 * Math.sin(Math.toRadians(bounceAngle)));
             ballSpeedY = (float) (6 * -Math.abs(Math.cos(Math.toRadians(bounceAngle))));
+        } else if (ballY + ballRadius > 600) {
+            // Wenn der Ball das Spielfeld unterhalb des Spielers verlässt, setze ihn zurück
+            resetBall();
         }
+    }
+
+    private void resetBall() {
+        ballX = 400;
+        ballY = 300;
+        ballSpeedX = 0;
+        ballSpeedY = 6;
+
     }
 
 
