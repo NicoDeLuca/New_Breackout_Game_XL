@@ -111,9 +111,21 @@ public class MyModel  {
         if (ballY - ballRadius < 0) {
             ballSpeedY = Math.abs(ballSpeedY);
         } else if (ballY + ballRadius > playerY && ballX + ballRadius > playerX && ballX - ballRadius < playerX + playerWidth) {
-            ballSpeedY = -Math.abs(ballSpeedY);
+            // Berechne, wo der Ball den Spieler getroffen hat, relativ zur Mitte des Spielers
+            float relativeIntersect = (ballX - (playerX + playerWidth / 2)) / (playerWidth / 2);
+
+            // Berechne den Abprallwinkel (75° bis -75°)
+            float bounceAngle = relativeIntersect * 75;
+
+            // Aktualisiere die Geschwindigkeit des Balls basierend auf dem Abprallwinkel
+            ballSpeedX = (float) (6 * Math.sin(Math.toRadians(bounceAngle)));
+            ballSpeedY = (float) (6 * -Math.abs(Math.cos(Math.toRadians(bounceAngle))));
         }
     }
+
+
+
+
 
     public void checkBlockCollisions() {
         for (float[] block : blocks) {
