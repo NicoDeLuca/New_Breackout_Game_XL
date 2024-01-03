@@ -34,7 +34,9 @@ public class MyView extends PApplet implements IView{
         drawBlocks(controller);
         playermovement();
         drawPlayer(controller);
-        
+        ballOutOfBounce();
+
+
     }
 
     public void drawPlayer(MyController controller) {
@@ -63,6 +65,9 @@ public class MyView extends PApplet implements IView{
             else{
                 loop();
             }
+        }
+        if (keyCode == ENTER){
+            frameRate(20);
         }
 
     }
@@ -94,6 +99,17 @@ public class MyView extends PApplet implements IView{
                 rect(block[0], block[1], block[2], block[3]);
             }
         }
+    }
+
+    public void ballOutOfBounce(){
+
+        if (controller.getBallY() + controller.getBallRadius() > 630) {
+            // Wenn der Ball das Spielfeld unterhalb des Spielers verlässt, setze ihn zurück
+            controller.resetBall();
+            noLoop();
+
+        }
+
     }
 
 }

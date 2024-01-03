@@ -1,6 +1,6 @@
 package Model;
 import Controller.*;
-import processing.core.PApplet;
+
 
 import java.util.List;
 import java.util.ArrayList;
@@ -27,6 +27,10 @@ public class MyModel  {
 
     public float getBallY() {
         return ballY;
+    }
+
+    public float getBallRadius() {
+        return ballRadius;
     }
 
     public MyModel() {
@@ -120,22 +124,16 @@ public class MyModel  {
             // Aktualisiere die Geschwindigkeit des Balls basierend auf dem Abprallwinkel
             ballSpeedX = (float) (6 * Math.sin(Math.toRadians(bounceAngle)));
             ballSpeedY = (float) (6 * -Math.abs(Math.cos(Math.toRadians(bounceAngle))));
-        } else if (ballY + ballRadius > 600) {
-            // Wenn der Ball das Spielfeld unterhalb des Spielers verlässt, setze ihn zurück
-            resetBall();
         }
     }
 
-    private void resetBall() {
+    public void resetBall() {
         ballX = 400;
         ballY = 300;
         ballSpeedX = 0;
         ballSpeedY = 6;
 
     }
-
-
-
 
 
     public void checkBlockCollisions() {

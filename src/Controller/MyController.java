@@ -49,12 +49,20 @@ public class MyController implements IController{
         return model.getBallY();
     }
 
-
+    public float getBallRadius() {
+        return model.getBallRadius();
+    }
 
     public void moveBall() { //ruft die MoveBall Methode um sie dann in der View von hier aufrufen zu können.
         model.moveBall();
         model.checkBlockCollisions();
+
     }
+    public void resetBall(){
+
+    model.resetBall();
+    }
+
 
     public MyModel getModel() {
         return model;
