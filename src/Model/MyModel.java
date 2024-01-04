@@ -45,19 +45,72 @@ public class MyModel  {
         playerHeight = 20;
         blocks = new ArrayList<>();
 
-        for(float k = 10; k <= 60f; k += 25f){
-            for (float i = 10; i <= 725; i+=55f){
-                float[] l = {i, k};
+        for(float k = 10; k <= 25f; k += 25f){
+            for (float i = 15; i <= 730; i+=55f){
+                float c = 0;
+                float[] l = {i, k, c};
+                createBlock(l);
+            }
+        }
+
+        for(float k = 35; k <= 50f; k += 25f){
+            for (float i = 15; i <= 730; i+=55f){
+                float c = 1;
+                float[] l = {i, k, c};
+
+                createBlock(l);
+            }
+        }
+        for(float k = 60; k <= 70f; k += 25f){
+            for (float i = 15; i <= 730; i+=55f){
+                float c = 2;
+                float[] l = {i, k, c};
+
+                createBlock(l);
+            }
+        }
+        for(float k = 85; k <= 100f; k += 25f){
+            for (float i = 15; i <= 730; i+=55f){
+                float c = 3;
+                float[] l = {i, k, c};
+
+                createBlock(l);
+            }
+        }
+        for(float k = 110; k <= 130f; k += 25f){
+            for (float i = 15; i <= 730; i+=55f){
+                float c = 4;
+                float[] l = {i, k, c};
+
+                createBlock(l);
+            }
+        }
+        for(float k = 135; k <= 155f; k += 25f){
+            for (float i = 15; i <= 730; i+=55f){
+                float c = 5;
+                float[] l = {i, k, c};
+
+                createBlock(l);
+            }
+        }
+        for(float k = 160; k <= 175f; k += 25f){
+            for (float i = 15; i <= 730; i+=55f){
+                float c = 6;
+                float[] l = {i, k, c};
+
                 createBlock(l);
             }
         }
 
 
 
+
     }
     public void createBlock(float[] blockcords){
-        blocks.add(new float[]{blockcords[0], blockcords[1], 50f, 20f, 0f});
+        blocks.add(new float[]{blockcords[0], blockcords[1], 50f, 20f, 0f,blockcords[2]});
     }
+
+
 
     public float getPlayerX() {
         return playerX;
