@@ -1,7 +1,7 @@
 package Controller;
 import View.*;
 import Model.*;
-
+import java.util.List;
 
 
 public class MyController implements IController{
@@ -31,8 +31,10 @@ public class MyController implements IController{
 
     public void moveRight() {
         float playerX = model.getPlayerX();
-        if (playerX < 640) // Prüft, ob der Spieler noch auf dem Spielfeld ist
+        float playerWidth = model.getPlayerWidth();
+        if (playerX + playerWidth < 790) // Prüft, ob der Spieler noch auf dem Spielfeld ist
             model.setPlayerX(playerX + 10); // Verschiebt den Spieler nach rechts
+     // Verschiebt den Spieler nach rechts
     }
 
     public void moveLeft() {
@@ -49,25 +51,69 @@ public class MyController implements IController{
         return model.getBallY();
     }
 
-    public float getBallRadius() {
-        return model.getBallRadius();
+    public float getItemX() {
+        return model.getItemX();
     }
+
+    public float getPlayerY() {
+        return model.getPlayerY();
+    }
+
+    public float getPlayerX() {
+        return model.getPlayerX();
+    }
+
+    public float getPlayerWidth() {
+        return model.getPlayerWidth();
+    }
+
+    public float getItemY() {
+        return model.getItemY();
+    }
+
+    public int getLeben(){
+        return model.getLeben();
+    }
+
+
+    public int getScore(){
+        return model.getScore();
+    }
+    public boolean isWinning(){
+        return model.isWinning();
+    }
+
+//    public boolean isGameOver() {
+//        return model.isGameOver();
+//    }
+
 
     public void moveBall() { //ruft die MoveBall Methode um sie dann in der View von hier aufrufen zu können.
         model.moveBall();
         model.checkBlockCollisions();
+        model.itemCollision();
 
     }
-    public void resetBall(){
 
-    model.resetBall();
-    }
 
 
     public MyModel getModel() {
         return model;
     }
 
+    public List<float[]> getItems() {
+        return model.getItems();
+    }
+
+    public List<float[]> getBalls() {
+        return model.getBalls();
+    }
 
 
-}
+
+        public boolean ballOutOfBounce() {
+            return model.ballOutOfBounce();
+        }
+    }
+
+
