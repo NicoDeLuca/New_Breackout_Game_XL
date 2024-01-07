@@ -65,7 +65,7 @@ public class MyView extends PApplet implements IView{
             text("Sie haben gewonnen.",230,300);
             controller.resetGameWin();}
 
-        if (controller.getPlayerWidth() > 600){
+        if (controller.getPlayerWidth() > 780){
             noLoop();
             textSize(40);
             text("Jetzt haben sie tatsächlich gewonnen.",230,300);

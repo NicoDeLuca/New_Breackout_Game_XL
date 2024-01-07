@@ -5,10 +5,7 @@ import java.util.*;
 public class MyModel extends Thread {
 
     private List<float[]> blocks, balls, items;
-
-
-
-
+    ArrayList<Thread> threads;
     private float playerX ,playerWidth ,ballX ,ballY, ballSpeedX, ballSpeedY, ballRadius, itemX, itemY, itemSpeedY;
     private final float playerY, playerHeight;
 
@@ -35,104 +32,27 @@ public class MyModel extends Thread {
         createBlockRows();
 
     }
-
-
-    ArrayList<Thread> threads;
-
-    // Erstelle eine Methode, die die Threads erstellt und startet
     void createBlockRows() {
-        Thread t1 = new Thread(() -> {
-            for(float k = 10; k <= 25f; k += 25f){
-                for (float i = 17; i <= 733; i+=55f){
-                    float c = 0;
-                    float[] l = {i, k, c};
-                    createBlock(l);
+        for(int temp = 0; temp <= 6; temp++){
+            final float c = temp;
+            float k = 10 + c * 25;
+            Thread t = new Thread(() -> {
+                for(float j = k; j <= k + 15f; j += 25f){
+                    for (float i = 17; i <= 733; i+=55f){
+                        float[] l = {i, j, c};
+                        createBlock(l);
+                    }
                 }
-            }
-        });
+            });
 
-        Thread t2 = new Thread(() -> {
-            for(float k = 35; k <= 50f; k += 25f){
-                for (float i = 17; i <= 733; i+=55f){
-                    float c = 1;
-                    float[] l = {i, k, c};
-                    createBlock(l);
-                }
-            }
-        });
+            // Füge den Thread zur ArrayList hinzu
+            threads.add(t);
 
-        Thread t3 = new Thread(() -> {
-            for(float k = 60; k <= 75f; k += 25f){
-                for (float i = 17; i <= 733; i+=55f){
-                    float c = 2;
-                    float[] l = {i, k, c};
-                    createBlock(l);
-                }
-            }
-        });
-
-        Thread t4 = new Thread(() -> {
-            for(float k = 85; k <= 100f; k += 25f){
-                for (float i = 17; i <= 733; i+=55f){
-                    float c = 3;
-                    float[] l = {i, k, c};
-                    createBlock(l);
-                }
-            }
-        });
-
-        Thread t5 = new Thread(() -> {
-            for(float k = 110; k <= 130f; k += 25f){
-                for (float i = 17; i <= 733; i+=55f){
-                    float c = 4;
-                    float[] l = {i, k, c};
-                    createBlock(l);
-                }
-            }
-        });
-
-        Thread t6 = new Thread(() -> {
-            for(float k = 135; k <= 155f; k += 25f){
-                for (float i = 17; i <= 733; i+=55f){
-                    float c = 5;
-                    float[] l = {i, k, c};
-                    createBlock(l);
-                }
-            }
-        });
-
-        Thread t7 = new Thread(() -> {
-            for(float k = 160; k <= 175f; k += 25f){
-                for (float i = 17; i <= 733; i+=55f){
-                    float c = 6;
-                    float[] l = {i, k, c};
-                    createBlock(l);
-                }
-            }
-        });
-
-        // Füge die Threads zur ArrayList hinzu
-        threads.add(t1);
-        threads.add(t2);
-        threads.add(t3);
-        threads.add(t4);
-        threads.add(t5);
-        threads.add(t6);
-        threads.add(t7);
-
-        // Starte die Threads
-        t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
-        t5.start();
-        t6.start();
-        t7.start();
+            // Starte den Thread
+            t.start();
+        }
     }
 
-
-
-    // Ersetze die erste Schleife in deinem Konstruktor mit einem Aufruf der createBlockRows-Methode
 
     public void createBlock(float[] blockcords){
         blocks.add(new float[]{blockcords[0], blockcords[1], 50f, 20f, 0f,blockcords[2]});
