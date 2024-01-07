@@ -37,7 +37,7 @@ public class MyModel extends Thread {
     }
 
 
-    ArrayList<Thread> threads = new ArrayList<Thread>();
+    ArrayList<Thread> threads;
 
     // Erstelle eine Methode, die die Threads erstellt und startet
     void createBlockRows() {
@@ -371,7 +371,7 @@ public class MyModel extends Thread {
         if (balls.isEmpty()) {
             leben = leben - 1;
             if (leben == 0){
-                resetGame();
+                resetGameLoose();
                 return true;
                 // Das Spiel ist beendet
             } else {
@@ -383,14 +383,24 @@ public class MyModel extends Thread {
         return false;  // Das Spiel ist nicht beendet
     }
 
-    public void resetGame() {
+    public void resetGameLoose() {
         leben = 3;
         score = 0;
+        playerWidth = 150;
         blocks.clear();
         createBlockRows();
 
         // Fügt einen neuen Ball hinzu
         float middleOfPlayer = playerX + playerWidth / 2;
+        balls.add(new float[]{middleOfPlayer, playerY, 0, -5, 10});
+    }
+
+    public void resetGameWin() {
+
+        createBlockRows();
+
+        float middleOfPlayer = playerX + playerWidth / 2;
+        balls.clear();
         balls.add(new float[]{middleOfPlayer, playerY, 0, -5, 10});
     }
 

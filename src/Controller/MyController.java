@@ -83,9 +83,13 @@ public class MyController implements IController{
         return model.isWinning();
     }
 
-//    public boolean isGameOver() {
-//        return model.isGameOver();
-//    }
+    public void resetGameLoose() {
+        model.resetGameLoose();
+    }
+
+    public void resetGameWin() {
+        model.resetGameWin();
+    }
 
 
     public void moveBall() { //ruft die MoveBall Methode um sie dann in der View von hier aufrufen zu können.

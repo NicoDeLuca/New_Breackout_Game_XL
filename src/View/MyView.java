@@ -49,7 +49,7 @@ public class MyView extends PApplet implements IView{
         textSize(12);
         text("Leben: "+controller.getLeben(), 730, 560);
         text("Score: "+controller.getScore(), 30, 560);
-        isWinning();
+//        isWinning();
         for (float[] item : controller.getItems()) {
             drawItem(item);
         }
@@ -58,6 +58,19 @@ public class MyView extends PApplet implements IView{
             noLoop();
             text("Sie haben verloren.",250,300);
         }
+
+        if (controller.isWinning()){
+            noLoop();
+            textSize(40);
+            text("Sie haben gewonnen.",230,300);
+            controller.resetGameWin();}
+
+        if (controller.getPlayerWidth() > 600){
+            noLoop();
+            textSize(40);
+            text("Jetzt haben sie tatsächlich gewonnen.",230,300);
+            controller.resetGameLoose();}
+
 
 
     }
@@ -173,13 +186,13 @@ public class MyView extends PApplet implements IView{
 
 
 
-    public void isWinning(){
-        List<float[]> balls = controller.getBalls();
-        if (controller.isWinning()){
-            noLoop();
-            textSize(40);
-            text("Sie haben gewonnen.",230,300);
-        }
-    }
+//    public void isWinning(){
+//
+//        if (controller.isWinning()){
+//            noLoop();
+//            textSize(40);
+//            text("Sie haben gewonnen.",230,300);
+//        }
+//    }
 
 }
