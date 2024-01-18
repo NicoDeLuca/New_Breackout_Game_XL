@@ -1,21 +1,22 @@
 package View;
-import Controller.MyController;
+import Controller.IController;
 import processing.core.PApplet;
 import processing.core.PImage;
 import java.util.List;
 
 public class MyView extends PApplet implements IView{
-    private MyController controller;
-    PImage BallBild;
-    PImage SpielerBild;
+    private IController controller;
+    PImage BallPicture;
+    PImage PlayerPicture;
     PImage Bg;
     PImage block_01,block_02,block_03,block_04,block_05,block_06,block_07,block_08,item_01;
 
     private boolean left, right;
 
-    public void setController(MyController controller) {
+    public void setController(IController controller) {
         this.controller = controller;
     }
+
 
     public void settings() {
         size(800, 600);
@@ -23,18 +24,18 @@ public class MyView extends PApplet implements IView{
 
     public void setup() {
         frameRate(60);
-        BallBild = loadImage("Ball.png");
-        SpielerBild = loadImage("Spieler.png");
-        Bg = loadImage("Background.png");
-        block_01 = loadImage("block_01.png");
-        block_02 = loadImage("block_02.png");
-        block_03 = loadImage("block_03.png");
-        block_04 = loadImage("block_04.png");
-        block_05 = loadImage("block_05.png");
-        block_06 = loadImage("block_06.png");
-        block_07 = loadImage("block_07.png");
-        block_08 = loadImage("block_08.png");
-        item_01 = loadImage("item_01.png");
+        BallPicture = loadImage("Pictures/Ball.png");
+        PlayerPicture = loadImage("Pictures/Spieler.png");
+        Bg = loadImage("Pictures/Background.png");
+        block_01 = loadImage("Pictures/block_01.png");
+        block_02 = loadImage("Pictures/block_02.png");
+        block_03 = loadImage("Pictures/block_03.png");
+        block_04 = loadImage("Pictures/block_04.png");
+        block_05 = loadImage("Pictures/block_05.png");
+        block_06 = loadImage("Pictures/block_06.png");
+        block_07 = loadImage("Pictures/block_07.png");
+        block_08 = loadImage("Pictures/block_08.png");
+        item_01 = loadImage("Pictures/item_01.png");
         left = false;
         right = false;
     }
@@ -46,42 +47,28 @@ public class MyView extends PApplet implements IView{
         drawBlocks(controller);
         playermovement();
         drawPlayer(controller);
+        drawShots();
         textSize(12);
         text("Leben: "+controller.getLeben(), 730, 560);
         text("Score: "+controller.getScore(), 30, 560);
-//        isWinning();
+
+
         for (float[] item : controller.getItems()) {
             drawItem(item);
         }
-        if (controller.ballOutOfBounce()) {
-            textSize(40);
-            noLoop();
-            text("Sie haben verloren.",250,300);
-        }
-
-        if (controller.isWinning()){
-            noLoop();
-            textSize(40);
-            text("Sie haben gewonnen.",230,300);
-            controller.resetGameWin();}
-
-        if (controller.getPlayerWidth() > 780){
-            noLoop();
-            textSize(40);
-            text("Jetzt haben sie tatsächlich gewonnen.",230,300);
-            controller.resetGameLoose();}
+        winOrLoose();
 
 
 
     }
 
-    public void drawPlayer(MyController controller) {
+    public void drawPlayer(IController controller) {
         float playerX = controller.getModel().getPlayerX();
         float playerY = controller.getModel().getPlayerY();
         float playerWidth = controller.getModel().getPlayerWidth();
         float playerHeight = controller.getModel().getPlayerHeight();
         rect(playerX, playerY, playerWidth, playerHeight, 7); // Zeichnet den Spieler //mit gettern Arbeiten und Variablen in Privat ändern!
-        image(SpielerBild,playerX,playerY,playerWidth,playerHeight);
+        image(PlayerPicture,playerX,playerY,playerWidth,playerHeight);
 
     }
 
@@ -124,20 +111,25 @@ public class MyView extends PApplet implements IView{
         for (float[] ball : controller.getBalls()) {
             float ballX = ball[0];
             float ballY = ball[1];
-            ellipse(ballX, ballY, 20, 20); // Zeichnet den Ball
-            image(BallBild, ballX - 10, ballY - 10);
+            ellipse(ballX, ballY, 20, 20);
+            image(BallPicture, ballX - 10, ballY - 10);
         }
     }
 
-
+    public void drawShots() {
+        for (float[] shot : controller.getShots()) {
+            float shotX = shot[0];
+            float shotY = shot[1];
+            fill(222,159,223);
+            ellipse(shotX, shotY, 10, 10);
+            fill(255);
+        }
+    }
     public void drawItem(float[] item) {
-        // Verwenden Sie die Processing-Zeichenmethoden, um das Item zu zeichnen
-        // Zum Beispiel, um ein einfaches Rechteck zu zeichnen:
-
         image(item_01,item[0] -10,item[1]-10);
     }
 
-    public void drawBlocks(MyController controller) {
+    public void drawBlocks(IController controller) {
         List<float[]> blocks = controller.getModel().getBlocks();
         for (float[] block : blocks) {
             if (block[4] == 0 && block[5] == 0) { // Wenn der Block nicht zerstört ist
@@ -183,16 +175,25 @@ public class MyView extends PApplet implements IView{
         }
     }
 
+    public void winOrLoose(){
+        if (controller.ballOutOfBounce()) {
+            textSize(40);
+            noLoop();
+            text("Sie haben verloren.",250,300);
+        }
 
+        if (controller.isWinning()){
+            noLoop();
+            textSize(40);
+            text("Sie haben gewonnen.",230,300);
+            controller.resetGameWin();}
 
+        if (controller.getPlayerWidth() > 770){
+            noLoop();
+            textSize(40);
+            text("Jetzt haben sie tatsächlich gewonnen.",110,300);
+            controller.resetGameLoose();}
+    }
 
-//    public void isWinning(){
-//
-//        if (controller.isWinning()){
-//            noLoop();
-//            textSize(40);
-//            text("Sie haben gewonnen.",230,300);
-//        }
-//    }
 
 }

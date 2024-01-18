@@ -1,18 +1,16 @@
 package Controller;
-import View.*;
-import Model.*;
+import View.IView;
+import Model.IModel;
 import java.util.List;
 
 
 public class MyController implements IController{
 
+    private IView view;
 
+    private IModel model;
 
-    private MyView view;
-
-    private MyModel model;
-
-    public MyController(MyView view, MyModel model) {
+    public MyController(IView view, IModel model) {
 
         this.view = view;
         this.model = model;
@@ -20,13 +18,14 @@ public class MyController implements IController{
 
 
 
-    public void setView(MyView view) {
+    public void setView(IView view) {
         this.view = view;
     }
 
-    public void setModel(MyModel model) {
+    public void setModel(IModel model) {
         this.model = model;
     }
+
 
 
     public void moveRight() {
@@ -43,25 +42,6 @@ public class MyController implements IController{
             model.setPlayerX(playerX - 10); // Verschiebt den Spieler nach rechts
     }
 
-    public float getBallX() {
-        return model.getBallX();
-    }
-
-    public float getBallY() {
-        return model.getBallY();
-    }
-
-    public float getItemX() {
-        return model.getItemX();
-    }
-
-    public float getPlayerY() {
-        return model.getPlayerY();
-    }
-
-    public float getPlayerX() {
-        return model.getPlayerX();
-    }
 
     public float getPlayerWidth() {
         return model.getPlayerWidth();
@@ -72,7 +52,7 @@ public class MyController implements IController{
     }
 
     public int getLeben(){
-        return model.getLeben();
+        return model.getLife();
     }
 
 
@@ -95,13 +75,13 @@ public class MyController implements IController{
     public void moveBall() { //ruft die MoveBall Methode um sie dann in der View von hier aufrufen zu können.
         model.moveBall();
         model.checkBlockCollisions();
-        model.itemCollision();
-
+        model.itemCollision();                  //neu benennen
+        model.moveShots();
+        model.checkShotBlockCollisions();
     }
 
 
-
-    public MyModel getModel() {
+    public IModel getModel() {
         return model;
     }
 
@@ -113,11 +93,15 @@ public class MyController implements IController{
         return model.getBalls();
     }
 
+    public List<float[]> getShots() {
+        return model.getShots();
+    }
 
-
-        public boolean ballOutOfBounce() {
+    public boolean ballOutOfBounce() {
             return model.ballOutOfBounce();
         }
+
+
     }
 
 

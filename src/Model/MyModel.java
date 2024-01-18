@@ -2,14 +2,14 @@ package Model;
 import java.util.*;
 
 
-public class MyModel extends Thread {
+public class MyModel extends Thread implements IModel{
 
-    private List<float[]> blocks, balls, items;
+    private  List<float[]> blocks, balls, items, shots;
     ArrayList<Thread> threads;
     private float playerX ,playerWidth ,ballX ,ballY, ballSpeedX, ballSpeedY, ballRadius, itemX, itemY, itemSpeedY;
     private final float playerY, playerHeight;
 
-    private int leben,score;
+    private int life,score;
 
     public MyModel() {
         itemSpeedY = 3;
@@ -22,17 +22,17 @@ public class MyModel extends Thread {
         playerY = 570.0F;
         playerWidth = 150;
         playerHeight = 20;
-        leben = 3;
+        life = 3;
         score = 0;
         items = new ArrayList<>();
         blocks = new ArrayList<>();
         threads = new ArrayList<>();
         balls = new ArrayList<>();
+        shots = new ArrayList<>();
         balls.add(new float[]{ballX, ballY, ballSpeedX, ballSpeedY, ballRadius});
         createBlockRows();
-
     }
-    void createBlockRows() {
+    public void createBlockRows() {
         for(int temp = 0; temp <= 6; temp++){
             final float c = temp;
             float k = 10 + c * 25;
@@ -45,10 +45,8 @@ public class MyModel extends Thread {
                 }
             });
 
-            // Füge den Thread zur ArrayList hinzu
             threads.add(t);
 
-            // Starte den Thread
             t.start();
         }
     }
@@ -58,81 +56,31 @@ public class MyModel extends Thread {
         blocks.add(new float[]{blockcords[0], blockcords[1], 50f, 20f, 0f,blockcords[2]});
     }
 
-    public float getBallX() {
-        return ballX;
-    }
-
-    public float getBallY() {
-        return ballY;
-    }
-
-    public float getBallRadius() {
-        return ballRadius;
-    }
-
-    public int getLeben() {
-        return leben;
-    }
-
-    public void setLeben(int leben) {
-        this.leben = leben;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public float getPlayerX() {
-        return playerX;
-    }
-
-    public void setPlayerX(float playerX) {
-        this.playerX = playerX;
-    }
-
-    public float getPlayerY() {
-        return playerY;
-    }
 
 
-    public float getPlayerWidth() {
-        return playerWidth;
-    }
-
-
-    public float getPlayerHeight() {
-        return playerHeight;
-    }
-
-
-    public float getItemX() {
-        return itemX;
-    }
-
-    public float getItemY() {
-        return itemY;
-    }
 
     public void moveBall() {
+        //Lernen!
         for (float[] ball : balls) {
+
             int steps = Math.max(Math.round(Math.abs(ball[2])), Math.round(Math.abs(ball[3])));
             float dx = ball[2] / steps;
             float dy = ball[3] / steps;
 
+
             for (int i = 0; i < steps; i++) {
                 ball[0] += dx;
                 ball[1] += dy;
+
+
                 checkCollision(ball);
-                checkBlockCollisions();
+
             }
         }
     }
 
-    private void checkCollision(float[] ball) {
+
+    public void checkCollision(float[] ball) {
         if (ball[0] - ball[4] < 0) {
             ball[2] = Math.abs(ball[2]);
         } else if (ball[0] + ball[4] > 800) {
@@ -145,8 +93,8 @@ public class MyModel extends Thread {
             float relativeIntersect = (ball[0] - (playerX + playerWidth / 2)) / (playerWidth / 2);
             ball[3] = ball[3] + 6;
             float bounceAngle = relativeIntersect * 75;
-            ball[2] = (float) (6 * Math.sin(Math.toRadians(bounceAngle)));
-            ball[3] = (float) (6 * -Math.abs(Math.cos(Math.toRadians(bounceAngle))));
+            ball[2] = (float) (7 * Math.sin(Math.toRadians(bounceAngle)));
+            ball[3] = (float) (7 * -Math.abs(Math.cos(Math.toRadians(bounceAngle))));
         }
     }
 
@@ -202,20 +150,18 @@ public class MyModel extends Thread {
 
 
 
-    public List<float[]> getBlocks () {
-        return blocks;
-    }
+
 
     public boolean isWinning() {
-        boolean sindAlleBloecheAus = true;
+        boolean blocksOn = true;
 
         for (float[] block : blocks) {
             if (Math.abs(block[4]) == 0) {
-                sindAlleBloecheAus = false;
+                blocksOn = false;
                 break;
             }
         }
-        return sindAlleBloecheAus;
+        return blocksOn;
     }
 
 
@@ -223,7 +169,6 @@ public class MyModel extends Thread {
         Random rand = new Random();
         int n = rand.nextInt(10);  // Generiert eine Zufallszahl zwischen 0 (inklusive) und 10 (exklusive)
         return n < 2;  // Gibt 'true' zurück mit einer Wahrscheinlichkeit von 20%
-
     }
 
     public void itemCollision(){
@@ -238,7 +183,7 @@ public class MyModel extends Thread {
             // Überprüfen Sie, ob das Item den Spieler getroffen hat
             if (item[1] >= playerY && item[0] >= playerX && item[0] <= playerX + playerWidth) {
                 // Das Item hat den Spieler getroffen, führen Sie hier den entsprechenden Code aus
-                int randomNum = random.nextInt(2);  // Generiert eine zufällige Zahl zwischen 0 und 2
+                int randomNum = random.nextInt(3);  // Generiert eine zufällige Zahl zwischen 0 und 2
 
                 switch (randomNum) {
                     case 0:
@@ -246,6 +191,9 @@ public class MyModel extends Thread {
                         break;
                     case 1:
                         item2();
+                        break;
+                    case 2:
+                        item3();
                         break;
                 }
 
@@ -258,16 +206,6 @@ public class MyModel extends Thread {
         }
     }
 
-
-
-    public List<float[]> getItems() {
-        return items;
-    }
-
-    public List<float[]> getBalls() {
-        return balls;
-    }
-
     public void item1(){
         playerWidth = playerWidth +10;
     }
@@ -276,6 +214,66 @@ public class MyModel extends Thread {
         float middleOfPlayer = playerX + playerWidth / 2;
         balls.add(new float[]{middleOfPlayer, playerY, 0, -5, 10});
     }
+    public void item3() {
+        new Thread(() -> {
+            for(int i = 0; i < 10; i++){
+
+                float middleOfPlayer = playerX + playerWidth / 2;
+                shots.add(new float[]{middleOfPlayer, playerY, 0, -5, i});
+                try {
+                    // Pausiert den Thread für 500ms
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace(); //fragen
+                }
+            }
+        }).start();
+    }
+
+
+    public void moveShots() {
+        Iterator<float[]> iterator = shots.iterator();
+
+        while (iterator.hasNext()) {
+            float[] shot = iterator.next();
+
+
+
+            shot[1] += shot[3];
+
+
+            if (shot[1] < 0) {
+
+                iterator.remove();
+            }
+        }
+    }
+
+    public void checkShotBlockCollisions() {
+        Iterator<float[]> shotIterator = shots.iterator();
+
+        while (shotIterator.hasNext()) {
+            float[] shot = shotIterator.next();
+            Iterator<float[]> blockIterator = blocks.iterator();
+
+            while (blockIterator.hasNext()) {
+                float[] block = blockIterator.next();
+
+
+                if (block[4] == 0 && shot[0] >= block[0] && shot[0] <= block[0] + block[2] &&
+                        shot[1] >= block[1] && shot[1] <= block[1] + block[3]) {
+
+                    shotIterator.remove();
+                    blockIterator.remove();
+                    score = score +100;
+
+
+                    break;
+                }
+            }
+        }
+    }
+
 
 
     public boolean ballOutOfBounce() {
@@ -289,8 +287,8 @@ public class MyModel extends Thread {
 
         // Wenn es keine Bälle mehr gibt, ziehe ein Leben ab und setze den Zustand zurück
         if (balls.isEmpty()) {
-            leben = leben - 1;
-            if (leben == 0){
+            life = life - 1;
+            if (life == 0){
                 resetGameLoose();
                 return true;
                 // Das Spiel ist beendet
@@ -304,7 +302,7 @@ public class MyModel extends Thread {
     }
 
     public void resetGameLoose() {
-        leben = 3;
+        life = 3;
         score = 0;
         playerWidth = 150;
         blocks.clear();
@@ -321,14 +319,61 @@ public class MyModel extends Thread {
 
         float middleOfPlayer = playerX + playerWidth / 2;
         balls.clear();
+        items.clear();
         balls.add(new float[]{middleOfPlayer, playerY, 0, -5, 10});
     }
 
+    public int getLife() {
+        return life;
+    }
 
 
+    public int getScore() {
+        return score;
+    }
 
 
+    public float getPlayerX() {
+        return playerX;
+    }
 
+    public void setPlayerX(float playerX) {
+        this.playerX = playerX;
+    }
+
+    public float getPlayerY() {
+        return playerY;
+    }
+
+
+    public float getPlayerWidth() {
+        return playerWidth;
+    }
+
+
+    public float getPlayerHeight() {
+        return playerHeight;
+    }
+
+
+    public float getItemY() {
+        return itemY;
+    }
+
+    public List<float[]> getBlocks () {
+        return blocks;
+    }
+    public List<float[]> getItems() {
+        return items;
+    }
+
+    public List<float[]> getBalls() {
+        return balls;
+    }
+
+    public List<float[]> getShots() {
+        return shots;
+    }
 }
 
 
