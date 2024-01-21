@@ -11,7 +11,7 @@ public interface IModel {
     float getPlayerY();
     float getPlayerWidth();
     float getPlayerHeight();
-    float getItemY();
+
     void moveBall();
     List<float[]> getItems();
     List<float[]> getBalls();
@@ -29,6 +29,6 @@ public interface IModel {
     void resetGameLoose();
     void resetGameWin();
 
-    void checkBlockCollisions();
+
 }
 

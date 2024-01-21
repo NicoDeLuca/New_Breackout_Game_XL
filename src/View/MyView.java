@@ -4,6 +4,10 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import java.util.List;
 
+/**
+ * Die Klasse die für alle Grafischen Sachen des Spiels verantwortlich ist.
+ */
+
 public class MyView extends PApplet implements IView{
     private IController controller;
     PImage BallPicture;
@@ -11,18 +15,31 @@ public class MyView extends PApplet implements IView{
     PImage Bg;
     PImage block_01,block_02,block_03,block_04,block_05,block_06,block_07,block_08,item_01;
 
+    private int gameHasStarted;
+
     private boolean left, right;
 
+    /**
+     *
+     * @param controller übergibt den Kontroller.
+     */
     public void setController(IController controller) {
         this.controller = controller;
     }
 
-
+    /**
+     * setzt die größe des Fensters des Spieles.
+     */
     public void settings() {
         size(800, 600);
     }
 
+    /**
+     * Läd alle Variablen und Bilder.
+     */
     public void setup() {
+        noLoop();
+        gameHasStarted = 1;
         frameRate(60);
         BallPicture = loadImage("Pictures/Ball.png");
         PlayerPicture = loadImage("Pictures/Spieler.png");
@@ -39,11 +56,16 @@ public class MyView extends PApplet implements IView{
         left = false;
         right = false;
     }
+
+    /**
+     * Zeichnet alles was im Spiel passiert.
+     */
     public void draw() {
+
         background(Bg);
         drawPlayer(controller);
         drawBalls();
-        controller.moveBall();
+        controller.runGame();
         drawBlocks(controller);
         playermovement();
         drawPlayer(controller);
@@ -51,7 +73,7 @@ public class MyView extends PApplet implements IView{
         textSize(12);
         text("Leben: "+controller.getLeben(), 730, 560);
         text("Score: "+controller.getScore(), 30, 560);
-
+        gameStart();
 
         for (float[] item : controller.getItems()) {
             drawItem(item);
@@ -62,16 +84,20 @@ public class MyView extends PApplet implements IView{
 
     }
 
+    /**
+     *
+     * @param controller wird übergeben um dessen Methoden und die des Models hier nutzbar zu machen, um den Spieler zu zeichnen.
+     */
     public void drawPlayer(IController controller) {
-        float playerX = controller.getModel().getPlayerX();
-        float playerY = controller.getModel().getPlayerY();
-        float playerWidth = controller.getModel().getPlayerWidth();
-        float playerHeight = controller.getModel().getPlayerHeight();
-        rect(playerX, playerY, playerWidth, playerHeight, 7); // Zeichnet den Spieler //mit gettern Arbeiten und Variablen in Privat ändern!
-        image(PlayerPicture,playerX,playerY,playerWidth,playerHeight);
+
+        rect(controller.getModel().getPlayerX(), controller.getModel().getPlayerY(), controller.getModel().getPlayerWidth(), controller.getModel().getPlayerHeight(), 7); // Zeichnet den Spieler //mit gettern Arbeiten und Variablen in Privat ändern!
+        image(PlayerPicture,controller.getModel().getPlayerX(),controller.getModel().getPlayerY(),controller.getModel().getPlayerWidth(),controller.getModel().getPlayerHeight());
 
     }
 
+    /**
+     * überprüft, ob bestimmte Tasten gedrückt werden.
+     */
     public void keyPressed() {
         switch (keyCode) {
             case(68)-> right = true;
@@ -81,18 +107,23 @@ public class MyView extends PApplet implements IView{
         if(key == 27){
             key = 0;
         }
+
         if(keyCode == ESC){
             if(looping){
                 noLoop();
             }
             else{
                 loop();
+                gameHasStarted = 0;
             }
         }
 
 
     }
 
+    /**
+     * Schaut, ob die Tasten A und D gedrückt sind, um die Steuerung zu verbessern.
+     */
     public void keyReleased() {
         switch (keyCode) {
             case(68)-> right = false;
@@ -100,6 +131,9 @@ public class MyView extends PApplet implements IView{
         }
     }
 
+    /**
+     * Verknüpft die Bewegung des Spielers mit den Tasten A und D.
+     */
     public void playermovement(){
         if(right)
             controller.moveRight();
@@ -107,6 +141,9 @@ public class MyView extends PApplet implements IView{
             controller.moveLeft();
     }
 
+    /**
+     * Zeichnet die Bälle.
+     */
     public void drawBalls() {
         for (float[] ball : controller.getBalls()) {
             float ballX = ball[0];
@@ -115,6 +152,10 @@ public class MyView extends PApplet implements IView{
             image(BallPicture, ballX - 10, ballY - 10);
         }
     }
+
+    /**
+     * Zeichnet die Schüsse des 3. Items
+     */
 
     public void drawShots() {
         for (float[] shot : controller.getShots()) {
@@ -125,10 +166,19 @@ public class MyView extends PApplet implements IView{
             fill(255);
         }
     }
+
+    /**
+     *
+     * @param item übergibt die Koordinaten, um das Item zu zeichnen.
+     */
     public void drawItem(float[] item) {
         image(item_01,item[0] -10,item[1]-10);
     }
 
+    /**
+     *
+     * @param controller wird übergeben, um die Blöcke zu zeichnen.
+     */
     public void drawBlocks(IController controller) {
         List<float[]> blocks = controller.getModel().getBlocks();
         for (float[] block : blocks) {
@@ -175,6 +225,9 @@ public class MyView extends PApplet implements IView{
         }
     }
 
+    /**
+     * Schaut ob der Spieler gewinnt oder verliert.
+     */
     public void winOrLoose(){
         if (controller.ballOutOfBounce()) {
             textSize(40);
@@ -193,6 +246,19 @@ public class MyView extends PApplet implements IView{
             textSize(40);
             text("Jetzt haben sie tatsächlich gewonnen.",110,300);
             controller.resetGameLoose();}
+    }
+
+    /**
+     * Zeichnet den Text, der am Anfang infos gibt.
+     */
+    public void gameStart(){
+        if(gameHasStarted == 1){
+            textSize(40);
+            text("Use A and D to move.",220,230);
+            text("Press ESC to Start.",250,280);
+
+
+        }
     }
 
 

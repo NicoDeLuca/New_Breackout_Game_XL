@@ -13,13 +13,12 @@ public interface IController {
     void moveRight();
     void moveLeft();
     float getPlayerWidth();
-    float getItemY();
     int getLeben();
     int getScore();
     boolean isWinning();
     void resetGameLoose();
     void resetGameWin();
-    void moveBall();
+    void runGame();
     IModel getModel();
     List<float[]> getItems();
     List<float[]> getBalls();

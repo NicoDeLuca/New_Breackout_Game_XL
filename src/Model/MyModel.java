@@ -1,7 +1,9 @@
 package Model;
 import java.util.*;
 
-
+/**
+ * Die Klasse die für die Logik des Spiels verantwortlich ist.
+ */
 public class MyModel extends Thread implements IModel{
 
     private  List<float[]> blocks, balls, items, shots;
@@ -32,6 +34,10 @@ public class MyModel extends Thread implements IModel{
         balls.add(new float[]{ballX, ballY, ballSpeedX, ballSpeedY, ballRadius});
         createBlockRows();
     }
+
+    /**
+     * Erstellt die Blockreihen des Spiels.
+     */
     public void createBlockRows() {
         for(int temp = 0; temp <= 6; temp++){
             final float c = temp;
@@ -51,16 +57,21 @@ public class MyModel extends Thread implements IModel{
         }
     }
 
-
+    /**
+     *
+     * @param blockcords übergibt die Blockkoordinaten, um damit dann die einzelnen Blöcke zu erstellen.
+     */
     public void createBlock(float[] blockcords){
         blocks.add(new float[]{blockcords[0], blockcords[1], 50f, 20f, 0f,blockcords[2]});
     }
 
 
-
+    /**
+     * Lässt die Bälle sich Bewegen.
+     */
 
     public void moveBall() {
-        //Lernen!
+
         for (float[] ball : balls) {
 
             int steps = Math.max(Math.round(Math.abs(ball[2])), Math.round(Math.abs(ball[3])));
@@ -74,12 +85,16 @@ public class MyModel extends Thread implements IModel{
 
 
                 checkCollision(ball);
-
+                checkBlockCollisions();
             }
         }
     }
 
-
+    /**
+     *
+     * @param ball übergibt die Koordinaten der verschiedenen Bälle um diese dann mit denen des Spielers und der
+     *             Wände auf Kollision zu überprüfen.
+     */
     public void checkCollision(float[] ball) {
         if (ball[0] - ball[4] < 0) {
             ball[2] = Math.abs(ball[2]);
@@ -90,19 +105,23 @@ public class MyModel extends Thread implements IModel{
         if (ball[1] - ball[4] < 0) {
             ball[3] = Math.abs(ball[3]);
         } else if (ball[1] + ball[4] > playerY && ball[0] + ball[4] > playerX && ball[0] - ball[4] < playerX + playerWidth) {
-            float relativeIntersect = (ball[0] - (playerX + playerWidth / 2)) / (playerWidth / 2);
-            ball[3] = ball[3] + 6;
-            float bounceAngle = relativeIntersect * 75;
+            float ballPlayerHit = (ball[0] - (playerX + playerWidth / 2)) / (playerWidth / 2);
+
+            float bounceAngle = ballPlayerHit * 75;
             ball[2] = (float) (7 * Math.sin(Math.toRadians(bounceAngle)));
             ball[3] = (float) (7 * -Math.abs(Math.cos(Math.toRadians(bounceAngle))));
         }
     }
 
+    /**
+     * Überprüft die Kollision zwischen Ball und Blöcken.
+     */
 
-
-    public void checkBlockCollisions() {
+    private void checkBlockCollisions() {
         for (float[] ball : balls) {
-            for (float[] block : blocks) {
+            Iterator<float[]> iterator = blocks.iterator();
+            while (iterator.hasNext()) {
+                float[] block = iterator.next();
                 if (block[4] == 0) {
                     float blockX = block[0];
                     float blockY = block[1];
@@ -121,14 +140,13 @@ public class MyModel extends Thread implements IModel{
                     float distance = (float)Math.sqrt( (distX*distX) + (distY*distY) );
 
                     if (distance <= ball[4]) {
-                        block[4] = 1f;
+                        iterator.remove();
                         score = score + 100;
 
                         if (shouldDropItem()) {
                             itemX = block[0] + block[2] / 2;  // Mitte des Blocks
                             itemY = block[1] + block[3];  // Unterseite des Blocks
                             items.add(new float[]{itemX, itemY, itemSpeedY});
-
                         }
 
                         if (distX > 0) {
@@ -148,8 +166,10 @@ public class MyModel extends Thread implements IModel{
     }
 
 
-
-
+    /**
+     *
+     * @return gibt zurück, ob alle Blöcke getroffen wurden und somit ob der Spieler gewonnen hat.
+     */
 
 
     public boolean isWinning() {
@@ -164,12 +184,19 @@ public class MyModel extends Thread implements IModel{
         return blocksOn;
     }
 
-
+    /**
+     *
+     * @return gibt zurück, ob ein Item erstellt werden soll anhand einer zufallszahl welche true ergibt, wenn sie unter 2 liegt.
+     */
     public boolean shouldDropItem() {
         Random rand = new Random();
-        int n = rand.nextInt(10);  // Generiert eine Zufallszahl zwischen 0 (inklusive) und 10 (exklusive)
-        return n < 2;  // Gibt 'true' zurück mit einer Wahrscheinlichkeit von 20%
+        int n = rand.nextInt(10);
+        return n < 2;
     }
+
+    /**
+     * Lässt das item sich bewegen und überprüft die Kollision zwischen Spieler und Item.
+     */
 
     public void itemCollision(){
         Random random = new Random();
@@ -205,15 +232,24 @@ public class MyModel extends Thread implements IModel{
             }
         }
     }
-
+    /**
+     * Erstellt das erste Item welches die Länge, des Spieler verlängert.
+     */
     public void item1(){
         playerWidth = playerWidth +10;
     }
 
+    /**
+     * Erstellt das zweite Item welches einen weiteren Ball hinzufügt.
+     */
     public void item2() {
         float middleOfPlayer = playerX + playerWidth / 2;
         balls.add(new float[]{middleOfPlayer, playerY, 0, -5, 10});
     }
+
+    /**
+     * Erstellt das dritte Item welches 10 Schüsse aus der Spieler mitte abfeuert.
+     */
     public void item3() {
         new Thread(() -> {
             for(int i = 0; i < 10; i++){
@@ -230,7 +266,9 @@ public class MyModel extends Thread implements IModel{
         }).start();
     }
 
-
+    /**
+     * Lässt die Schüsse des dritten Items sich bewegen und entfernt sie, wenn sie das Spielfeld verlassen.
+     */
     public void moveShots() {
         Iterator<float[]> iterator = shots.iterator();
 
@@ -248,7 +286,9 @@ public class MyModel extends Thread implements IModel{
             }
         }
     }
-
+    /**
+     * Checkt die Kollision zwischen Schüssen und Blöcken und entfernt beide, wenn sie treffen.
+     */
     public void checkShotBlockCollisions() {
         Iterator<float[]> shotIterator = shots.iterator();
 
@@ -275,7 +315,11 @@ public class MyModel extends Thread implements IModel{
     }
 
 
-
+    /**
+     * @return gibt true zurück, sollte der Ball aus dem Spielfeld fliegen und der Spieler hat noch leben,
+     * und false, wenn der Spieler keine Leben mehr hat. Vorher wird noch geschaut ob der ball der das Spielfeld verlässt
+     * der letzte in der liste ist.
+     */
     public boolean ballOutOfBounce() {
         for (int i = 0; i < balls.size(); i++) {
             float[] ball = balls.get(i);
@@ -301,6 +345,9 @@ public class MyModel extends Thread implements IModel{
         return false;  // Das Spiel ist nicht beendet
     }
 
+    /**
+     * resettet das Game, wenn der Spieler das Spiel verloren hat.
+     */
     public void resetGameLoose() {
         life = 3;
         score = 0;
@@ -312,7 +359,9 @@ public class MyModel extends Thread implements IModel{
         float middleOfPlayer = playerX + playerWidth / 2;
         balls.add(new float[]{middleOfPlayer, playerY, 0, -5, 10});
     }
-
+    /**
+     * resettet das Game, wenn der Spieler gewonnen hat.
+     */
     public void resetGameWin() {
 
         createBlockRows();
@@ -322,55 +371,79 @@ public class MyModel extends Thread implements IModel{
         items.clear();
         balls.add(new float[]{middleOfPlayer, playerY, 0, -5, 10});
     }
-
+    /**
+     * @return übergibt die Leben, die der Spieler noch hat.
+     */
     public int getLife() {
         return life;
     }
 
-
+    /**
+     * @return übergibt den Score des Spielers.
+     */
     public int getScore() {
         return score;
     }
 
-
+    /**
+     * @return übergibt die X-Koordinate des Spielers.
+     */
     public float getPlayerX() {
         return playerX;
     }
 
+    /**
+     * setzt die X-Koordinate des Spielers.
+     */
     public void setPlayerX(float playerX) {
         this.playerX = playerX;
     }
 
+    /**
+     * @return übergibt die Y-Koordinate des Spielers.
+     */
     public float getPlayerY() {
         return playerY;
     }
 
-
+    /**
+     * @return übergibt die Weite des Spielers.
+     */
     public float getPlayerWidth() {
         return playerWidth;
     }
 
-
+    /**
+     * @return übergibt die Höhe des Spielers.
+     */
     public float getPlayerHeight() {
         return playerHeight;
     }
 
-
-    public float getItemY() {
-        return itemY;
-    }
-
+    /**
+     * @return übergibt die Blöcke.
+     */
     public List<float[]> getBlocks () {
         return blocks;
     }
+
+    /**
+     * @return übergibt die Items.
+     */
     public List<float[]> getItems() {
         return items;
     }
 
+    /**
+     * @return übergibt die Bälle.
+     */
     public List<float[]> getBalls() {
         return balls;
     }
 
+    /**
+     * @return übergibt die Schüsse.
+     */
     public List<float[]> getShots() {
         return shots;
     }
